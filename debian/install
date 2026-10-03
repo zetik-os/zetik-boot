@@ -1,0 +1,13 @@
+bin/zetik-grub-install-theme usr/bin/
+bin/gen-grub-assets usr/bin/
+grub.d/90_zetik.cfg etc/default/grub.d/
+etc-grub.d/09_zetik_fonts etc/grub.d/
+etc-grub.d/40_zetik_custom etc/grub.d/
+grub-theme/zetik/theme.txt usr/share/zetik/grub-theme/zetik/
+grub-theme/zetik/theme.README usr/share/zetik/grub-theme/zetik/
+grub-theme/zetik/background.png usr/share/zetik/grub-theme/zetik/
+grub-theme/zetik/logo.png usr/share/zetik/grub-theme/zetik/
+grub-theme/zetik/terminal_box_c.png usr/share/zetik/grub-theme/zetik/
+live/grub-live.cfg usr/share/zetik/grub-theme/
+fonts/nanumbrushscript/NanumBrushScript-Regular.ttf usr/share/fonts/truetype/zetik/
+fonts/nanumbrushscript/LICENSE-OFL.txt usr/share/doc/zetik-boot/fonts/

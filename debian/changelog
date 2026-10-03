@@ -1,0 +1,5 @@
+zetik-boot (0.1.0) unstable; urgency=medium
+
+  * Initial release: GRUB theme, drop-in, Live menu, theme installer.
+
+ -- Zetik OS Maintainers <maintainers@zetik.invalid>  Thu, 01 Oct 2026 12:00:00 +0000

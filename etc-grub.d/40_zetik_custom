@@ -1,0 +1,13 @@
+#!/bin/sh
+# Zetik custom boot menu entries: firmware setup (UEFI) and shutdown.
+set -e
+cat <<'ENTRY'
+if [ "${grub_platform}" = "efi" ]; then
+  menuentry "UEFI settings" --class uefi {
+    fwsetup
+  }
+fi
+menuentry "Shut down" --class shutdown {
+  halt
+}
+ENTRY

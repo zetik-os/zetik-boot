@@ -1,0 +1,16 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: zetik-boot
+
+Files: *
+Copyright: 2026 Zetik OS Maintainers
+License: GPL-3.0-or-later
+ On Debian systems the full license text is in
+ /usr/share/common-licenses/GPL-3.
+
+Files: fonts/nanumbrushscript/*
+Copyright: 2010 NAVER Corporation
+License: OFL-1.1
+ Nanum Brush Script, with Reserved Font Name Nanum.
+ Licensed under the SIL Open Font License, Version 1.1.
+ The full license text is in fonts/nanumbrushscript/LICENSE-OFL.txt and at
+ https://scripts.sil.org/OFL

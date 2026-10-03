@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+if [ "$1" = "configure" ]; then
+  if [ -x /usr/sbin/zetik-grub-install-theme ] || [ -x /usr/bin/zetik-grub-install-theme ]; then
+    zetik-grub-install-theme /usr/share/zetik/grub-theme/zetik || true
+  fi
+  if command -v update-grub >/dev/null 2>&1; then
+    update-grub || true
+  fi
+fi
+#DEBHELPER#

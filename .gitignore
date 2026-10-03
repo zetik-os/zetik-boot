@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+grub-theme/zetik/background.png
+grub-theme/zetik/logo.png
+grub-theme/zetik/*_*.png
+dev/grub-preview.png

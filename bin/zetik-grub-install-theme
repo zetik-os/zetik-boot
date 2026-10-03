@@ -1,0 +1,47 @@
+#!/bin/sh
+# Install the Zetik GRUB theme for an installed system.
+# Copies the theme, builds .pf2 fonts, and is idempotent. Run as root.
+set -eu
+SRC="${1:-/usr/share/zetik/grub-theme/zetik}"
+DEST="/boot/grub/themes/zetik"
+
+[ -f "$SRC/theme.txt" ] || { echo "theme.txt not found in $SRC" >&2; exit 1; }
+[ -f "$SRC/background.png" ] || { echo "background.png missing; run gen-grub-assets" >&2; exit 1; }
+[ -f "$SRC/logo.png" ] || { echo "logo.png missing; run gen-grub-assets" >&2; exit 1; }
+
+mkdir -p "$DEST"
+cp -f "$SRC"/*.png "$SRC"/theme.txt "$DEST/"
+
+# Brand handwriting font (Nanum Brush Script, bundled); fall back if missing.
+HAND=""
+for cand in \
+  /usr/share/fonts/truetype/zetik/NanumBrushScript-Regular.ttf \
+  /usr/share/fonts/truetype/nanum/NanumBrushScript-Regular.ttf ; do
+  [ -f "$cand" ] && { HAND="$cand"; break; }
+done
+FALLBACK=""
+for cand in \
+  /usr/share/fonts/truetype/lato/Lato-Regular.ttf \
+  /usr/share/fonts/truetype/dejavu/DejaVuSans.ttf ; do
+  [ -f "$cand" ] && { FALLBACK="$cand"; break; }
+done
+HEAD_FONT="${HAND:-$FALLBACK}"
+
+if command -v grub-mkfont >/dev/null 2>&1 && [ -n "$HEAD_FONT" ]; then
+  for size in 18 20 22 30 34; do
+    grub-mkfont -n "Zetik Head" -s "$size" \
+      -o "$DEST/zetik-head-$size.pf2" "$HEAD_FONT"
+  done
+  [ -n "$FALLBACK" ] && grub-mkfont -n "Fallback" -s 16 \
+    -o "$DEST/fallback-16.pf2" "$FALLBACK"
+  if [ -n "$HAND" ]; then
+    echo "Using brand font: $HAND"
+  else
+    echo "Brand font missing; used fallback $FALLBACK (install zetik-boot assets)."
+  fi
+else
+  echo "grub-mkfont or a source font missing; theme will use GRUB's built-in font." >&2
+fi
+
+echo "Zetik GRUB theme installed to $DEST"
+echo "Run 'update-grub' to regenerate grub.cfg (loads fonts via 09_zetik_fonts)."

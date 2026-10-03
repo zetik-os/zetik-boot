@@ -1,0 +1,20 @@
+Zetik GRUB theme
+=================
+Files:
+  theme.txt              layout (black canvas, white logo left, menu right)
+  background.png         pure black background (screen sized)
+  logo.png               white Zetik logo (transparent), theme image slot
+  terminal_box_*.png     9-slice box for the GRUB terminal
+
+Fonts (.pf2) are built on the target by zetik-grub-install-theme using
+grub-mkfont, named "Zetik Head" (sizes 18-34) and "Fallback" (16). The brand
+font is Nanum Brush Script (OFL), bundled by zetik-boot at
+/usr/share/fonts/truetype/zetik/. Lato or DejaVu is used only if that font is
+missing. /etc/grub.d/09_zetik_fonts emits the loadfont lines into grub.cfg via
+update-grub.
+
+Text fallback: if the theme or gfxmode fails, GRUB uses the plain menu with the
+colors set in /etc/default/grub.d/90_zetik.cfg.
+
+Note: GRUB progress-bar text is a single color, so the countdown line is drawn
+entirely in the accent red rather than only the number.

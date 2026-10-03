@@ -1,0 +1,14 @@
+Source: zetik-boot
+Section: admin
+Priority: optional
+Maintainer: Zetik OS Maintainers <maintainers@zetik.invalid>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Rules-Requires-Root: no
+
+Package: zetik-boot
+Architecture: all
+Depends: grub2-common, fonts-dejavu-core, ${misc:Depends}
+Description: Zetik GNU GRUB theme and installed-system boot integration
+ Installs the Zetik GRUB theme, a managed /etc/default/grub.d drop-in,
+ and recovery-aware menu generation for installed systems.

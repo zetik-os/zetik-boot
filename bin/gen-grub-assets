@@ -1,0 +1,59 @@
+#!/usr/bin/python3
+"""Generate Zetik GRUB theme pixmaps: black background, white logo, box.
+
+Logo geometry mirrors zetik-artwork/logo/logo.json (canonical source). Kept
+here so zetik-boot builds standalone. Fonts are built at install time by
+zetik-grub-install-theme with grub-mkfont.
+"""
+
+import argparse
+import os
+
+from PIL import Image, ImageDraw
+
+# Canonical: zetik-artwork/logo/logo.json
+LOGO = {
+    "left": [(0.1667, 0.3342), (0.5918, 0.4646), (0.4654, 0.6079), (0.1667, 0.6764)],
+    "right": [(0.6386, 0.4807), (0.8519, 0.3945), (0.8495, 0.6562), (0.6441, 0.5781)],
+}
+
+
+def draw_logo(d, x, y, size, color):
+    for key in ("left", "right"):
+        d.polygon([(x + px * size, y + py * size) for px, py in LOGO[key]], fill=color)
+
+
+def main():
+    here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", default=os.path.join(here, "grub-theme", "zetik"))
+    ap.add_argument("--width", type=int, default=1920)
+    ap.add_argument("--height", type=int, default=1080)
+    a = ap.parse_args()
+    os.makedirs(a.out, exist_ok=True)
+
+    # Pure black background
+    Image.new("RGB", (a.width, a.height), (0, 0, 0)).save(
+        os.path.join(a.out, "background.png"))
+
+    # White logo on transparent, square canvas sized for the theme image slot
+    s = 512
+    logo = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    draw_logo(ImageDraw.Draw(logo), 0, 0, s, (255, 255, 255, 255))
+    logo.save(os.path.join(a.out, "logo.png"))
+
+    # Terminal 9-slice box (subtle dark panel with faint border)
+    tile = Image.new("RGBA", (48, 48), (0, 0, 0, 0))
+    ImageDraw.Draw(tile).rounded_rectangle([1, 1, 46, 46], radius=8,
+                                           fill=(20, 20, 20, 235), outline=(60, 60, 60, 255), width=2)
+    parts = {"nw": (0, 0, 16, 16), "n": (16, 0, 32, 16), "ne": (32, 0, 48, 16),
+             "w": (0, 16, 16, 32), "c": (16, 16, 32, 32), "e": (32, 16, 48, 32),
+             "sw": (0, 32, 16, 48), "s": (16, 32, 32, 48), "se": (32, 32, 48, 48)}
+    for suffix, box in parts.items():
+        tile.crop(box).save(os.path.join(a.out, f"terminal_box_{suffix}.png"))
+
+    print(f"GRUB assets written to {a.out}")
+
+
+if __name__ == "__main__":
+    main()

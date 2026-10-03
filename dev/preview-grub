@@ -1,0 +1,45 @@
+#!/usr/bin/python3
+# Dev-only preview of the Zetik GRUB theme layout (not shipped in the package).
+# Uses the bundled Nanum Brush Script font, same as the real theme.
+import os, sys
+from PIL import Image, ImageDraw, ImageFont
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+HAND = os.path.join(HERE, "..", "fonts", "nanumbrushscript", "NanumBrushScript-Regular.ttf")
+
+LOGO = {
+    "left": [(0.1667,0.3342),(0.5918,0.4646),(0.4654,0.6079),(0.1667,0.6764)],
+    "right":[(0.6386,0.4807),(0.8519,0.3945),(0.8495,0.6562),(0.6441,0.5781)],
+}
+# Nanum Brush Script has one weight; size carries the emphasis
+def font(sz, bold=False):
+    if os.path.exists(HAND): return ImageFont.truetype(HAND, sz)
+    return ImageFont.load_default()
+
+W,H=1920,1080
+img=Image.new("RGB",(W,H),(0,0,0)); d=ImageDraw.Draw(img)
+# logo white, left-center
+s=int(H*0.28); lx=int(W*0.22); ly=int(H*0.40)
+for key in ("left","right"):
+    d.polygon([(lx+px*s, ly+py*s) for px,py in LOGO[key]], fill=(255,255,255))
+# menu right
+mx=int(W*0.55)
+d.text((mx, int(H*0.25)), "Boot", font=font(40), fill=(240,240,240))
+entries=[("Zetik OS",True),("Advanced options",False),("UEFI settings",False),("Shut down",False)]
+y=int(H*0.33)
+for text,sel in entries:
+    f=font(58,bold=True) if sel else font(50)
+    d.text((mx,y), text, font=f, fill=(255,255,255) if sel else (138,138,138))
+    y+=int(H*0.085)
+# countdown, centered on the screen, all in the brand font
+cd=font(38)
+pre="Booting in "; num="5 s"
+tot=d.textlength(pre,font=cd)+d.textlength(num,font=cd)
+cx=(W-tot)/2; cy=int(H*0.82)
+d.text((cx,cy),pre,font=cd,fill=(220,220,220))
+d.text((cx+d.textlength(pre,font=cd),cy),num,font=cd,fill=(224,86,74))
+# key hints, brand font, bottom right
+h=font(26); hint="Up/Down: Select     Enter: Boot"
+d.text((W-d.textlength(hint,font=h)-40, H-60), hint, font=h, fill=(207,207,207))
+out=sys.argv[1] if len(sys.argv)>1 else "grub-preview.png"
+img.save(out); print("wrote",out)

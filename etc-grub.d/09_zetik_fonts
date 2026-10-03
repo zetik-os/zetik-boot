@@ -1,0 +1,12 @@
+#!/bin/sh
+# Emit loadfont lines for Zetik theme fonts so the theme can use them.
+set -e
+THEME_DIR=/boot/grub/themes/zetik
+prefix=/boot/grub
+for pf2 in "$THEME_DIR"/*.pf2; do
+  [ -e "$pf2" ] || continue
+  rel=${pf2#/boot}
+  echo "loadfont \$prefix${rel}" 2>/dev/null || true
+  # Fallback literal path if $prefix is not /boot/grub
+  echo "if [ -s ${pf2} ]; then loadfont ${pf2}; fi"
+done
