@@ -1,4 +1,4 @@
-zetik-boot (0.1.0) unstable; urgency=medium
+zetik-boot (0.1.1) unstable; urgency=medium
 
   * Initial release: GRUB theme, drop-in, Live menu, theme installer.
 
